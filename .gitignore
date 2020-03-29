@@ -1,3 +1,5 @@
 .idea/*
 venv/*
 */__pycache__/*
+seen_links.log
+.DS_Store

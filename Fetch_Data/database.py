@@ -59,13 +59,28 @@ class DB:
 
         if table not in exist_table:
             my_cursor = self.my_db.cursor()
-            stm = "CREATE TABLE " + table + " (username VARCHAR(255), password VARCHAR(255))"
+            stm = "CREATE TABLE " + table + " (brand VARCHAR(255), model VARCHAR(255), kilometers VARCHAR(255), year VARCHAR(255), cost VARCHAR(255))"
             my_cursor.execute(stm)
 
-    def run_sql_command(self, statement):
+    def insert_to_table(self, data):
         try:
-            self.my_cursor = self.my_db.cursor()
-            self.my_cursor.execute(statement)
-            self.my_db.commit()
-        except mysql.connector.Error as error:
+            my_db = mysql.connector.connect(
+                host=host,
+                user=user,
+                passwd=password
+            )
+
+            my_cursor = my_db.cursor()
+            stm = "USE " + database
+            my_cursor.execute(stm)
+            my_cursor.close()
+
+            my_cursor = my_db.cursor()
+            sql = "INSERT INTO " + table + " (brand, model, kilometers, year, cost) VALUES (%s, %s, %s, %s, %s)"
+            val = data
+            my_cursor.execute(sql, val)
+            my_db.commit()
+            my_cursor.close()
+            my_db.close()
+        except mysql.connector.errors as error:
             print("Something went wrong: {}".format(error))
