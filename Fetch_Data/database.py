@@ -5,7 +5,7 @@ import mysql.connector  # for connect to mysql server
 # configure your database here:
 host = "localhost"
 user = "root"
-password = "ASD123asd!@#"
+password = ""
 database = "bama"
 table = "data"
 
@@ -82,5 +82,28 @@ class DB:
             my_db.commit()
             my_cursor.close()
             my_db.close()
+        except mysql.connector.errors as error:
+            print("Something went wrong: {}".format(error))
+
+    def select(self, brand, model):
+        try:
+            my_db = mysql.connector.connect(
+                host=host,
+                user=user,
+                passwd=password
+            )
+            my_cursor = my_db.cursor()
+            stm = "USE " + database
+            my_cursor.execute(stm)
+            my_cursor.close()
+
+            mycursor = my_db.cursor()
+
+            mycursor.execute("SELECT * FROM " + table + " WHERE brand='" + brand + "' AND model='" + model + "'")
+
+            myresult = mycursor.fetchall()
+
+            return myresult
+
         except mysql.connector.errors as error:
             print("Something went wrong: {}".format(error))
